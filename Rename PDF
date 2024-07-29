@@ -1,0 +1,32 @@
+import os
+
+# Define the file name to be renamed
+file_name_to_rename = 'CQREPORT_1.pdf'
+
+# Define the root directory to start the search
+root_directory = r'C:\\Users\\richardp\\Documents\\HI\\maui - hi'  # Change this to the root directory you want to start from
+
+# Traverse the directory tree
+for dirpath, dirnames, filenames in os.walk(root_directory):
+    print(f"Checking directory: {dirpath}")  # Log the current directory
+    if file_name_to_rename in filenames:
+        try:
+            # Get the directory name
+            directory_name = os.path.basename(dirpath)
+
+            # Construct the current file path
+            current_file_path = os.path.join(dirpath, file_name_to_rename)
+
+            # Construct the new file path
+            new_file_name = f"{directory_name}_CQ_Report.pdf"
+            new_file_path = os.path.join(dirpath, new_file_name)
+
+            # Rename the file
+            os.rename(current_file_path, new_file_path)
+
+            print(f"Renamed '{current_file_path}' to '{new_file_path}'")
+
+        except Exception as e:
+            print(f"Failed to rename '{current_file_path}' due to {e}")
+    else:
+        print(f"File '{file_name_to_rename}' not found in {dirpath}")
