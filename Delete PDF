@@ -1,0 +1,44 @@
+import os
+import pandas as pd
+
+# Define the root directory to start the search
+root_directory = r'C:\\Users\\richardp\\Desktop\\HI CQ reports\\Honolulu - HI'  # Change this to the root directory you want to start from
+
+# Define the path to the Excel file
+excel_file_path = r'C:\\Users\\richardp\\Desktop\\HI CQ reports\\file.xlsx'  # Change this to the path of your Excel file
+
+# Read the Excel file
+try:
+    df = pd.read_excel(excel_file_path)
+    print("Excel file read successfully.")
+except Exception as e:
+    print(f"Failed to read the Excel file: {e}")
+    exit(1)
+
+try:
+    pdf_file_names = df['FileNames'].tolist()
+    print("PDF file names extracted successfully.")
+except KeyError:
+    print("Column 'FileNames' not found in the Excel file.")
+    exit(1)
+
+# Traverse the directory tree
+for dirpath, dirnames, filenames in os.walk(root_directory):
+    print(f"Checking directory: {dirpath}")  # Log the current directory
+    for pdf_file_name in pdf_file_names:
+        if pdf_file_name in filenames:
+            try:
+                # Construct the file path
+                file_path = os.path.join(dirpath, pdf_file_name)
+
+                # Delete the file
+                os.remove(file_path)
+
+                print(f"Deleted '{file_path}'")
+
+            except Exception as e:
+                print(f"Failed to delete '{file_path}' due to {e}")
+        else:
+            print(f"File '{pdf_file_name}' not found in {dirpath}")
+
+print("Process finished.")
